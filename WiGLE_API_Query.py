@@ -18,10 +18,10 @@ end_time_str = end_time.strftime('%Y%m%d%H%M%S')
 
 # Common parameters with restricted geographic range
 common_params = {
-    "latrange1": "51.1889",  # Lower latitude boundary
-    "latrange2": "51.2499",  # Upper latitude boundary
-    "longrange1": "15.8711", # Lower longitude boundary
-    "longrange2": "16.09", # Upper longitude boundary
+    "latrange1": "51.098",  # Lower latitude boundary
+    "latrange2": "51.3418",  # Upper latitude boundary
+    "longrange1": "15.5404", # Lower longitude boundary
+    "longrange2": "16.4159", # Upper longitude boundary
     "firsttime": start_time_str,  # Start time for data filtering
     "lasttime": end_time_str,     # End time for data filtering
     "resultsPerPage": "1000"      # Maximum number of results per page
