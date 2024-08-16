@@ -8,9 +8,9 @@ API_Name = "*****"
 API_Token = "*****"
 
 # Date format for the API: yyyyMMdd
-output_date = "2024-07-03"
-start_time = datetime(2024, 7, 3, 0, 0, 0)  # Start of the day
-end_time = datetime(2024, 7, 3, 23, 59, 59)  # End of the day
+output_date = "2024-08-09"
+start_time = datetime(2024, 8, 9, 0, 0, 0)  # Start of the day
+end_time = datetime(2024, 8, 9, 23, 59, 59)  # End of the day
 
 # Convert to the appropriate format for the API
 start_time_str = start_time.strftime('%Y%m%d%H%M%S')
@@ -18,10 +18,10 @@ end_time_str = end_time.strftime('%Y%m%d%H%M%S')
 
 # Common parameters with restricted geographic range
 common_params = {
-    "latrange1": "50.5702",  # Lower latitude boundary
-    "latrange2": "51.0475",  # Upper latitude boundary
-    "longrange1": "14.9661", # Lower longitude boundary
-    "longrange2": "16.5578", # Upper longitude boundary
+    "latrange1": "51.1889",  # Lower latitude boundary
+    "latrange2": "51.2499",  # Upper latitude boundary
+    "longrange1": "15.8711", # Lower longitude boundary
+    "longrange2": "16.09", # Upper longitude boundary
     "firsttime": start_time_str,  # Start time for data filtering
     "lasttime": end_time_str,     # End time for data filtering
     "resultsPerPage": "1000"      # Maximum number of results per page
