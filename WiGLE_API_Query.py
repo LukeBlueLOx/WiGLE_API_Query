@@ -2,27 +2,25 @@ import requests
 from requests.auth import HTTPBasicAuth
 from datetime import datetime
 import pandas as pd
-import time
 
-def datetime_to_timestamp(dt):
-    return int(time.mktime(dt.timetuple())) * 1000
+# Date format for the API: yyyyMMdd
+output_date = "2024-07-03"
+start_time = datetime(2024, 7, 3, 0, 0, 0)  # Start of the day
+end_time = datetime(2024, 7, 3, 23, 59, 59)  # End of the day
 
-# Time settings
-start_time = datetime(2024, 8, 9, 0, 0, 0)
-end_time = datetime(2024, 8, 9, 23, 59, 59)
-
-start_timestamp = datetime_to_timestamp(start_time)
-end_timestamp = datetime_to_timestamp(end_time)
+# Convert to the appropriate format for the API
+start_time_str = start_time.strftime('%Y%m%d%H%M%S')
+end_time_str = end_time.strftime('%Y%m%d%H%M%S')
 
 # Common parameters with restricted geographic range
 common_params = {
-    "latrange1": "51.1894",
-    "latrange2": "51.2504",
-    "longrange1": "15.8701",
-    "longrange2": "16.089",
-    "startTime": start_timestamp,
-    "endTime": end_timestamp,
-    "maxresults": "1000"  # Initial results limit per page
+    "latrange1": "50.5702",  # Lower latitude boundary
+    "latrange2": "51.0475",  # Upper latitude boundary
+    "longrange1": "14.9661", # Lower longitude boundary
+    "longrange2": "16.5578", # Upper longitude boundary
+    "firsttime": start_time_str,  # Start time for data filtering
+    "lasttime": end_time_str,     # End time for data filtering
+    "resultsPerPage": "1000"      # Maximum number of results per page
 }
 
 base_url = "https://api.wigle.net/api/v2"
@@ -30,9 +28,12 @@ base_url = "https://api.wigle.net/api/v2"
 def fetch_data(endpoint, params):
     url = f"{base_url}/{endpoint}/search"
     all_results = []
-    params['page'] = 1  # Initialize page number
-    
+    search_after = None  # For pagination
+
     while True:
+        if search_after:
+            params['searchAfter'] = search_after
+
         response = requests.get(url, auth=HTTPBasicAuth('*****', '*****'), params=params)
         response.raise_for_status()  # Error checking
         data = response.json()
@@ -43,31 +44,32 @@ def fetch_data(endpoint, params):
 
         all_results.extend(results)
 
-        if len(results) < int(params['maxresults']):
+        search_after = data.get('searchAfter')
+        if not search_after or len(results) < int(params['resultsPerPage']):
             break
-
-        params['page'] += 1
 
     return all_results
 
-# Fetching data
-print("Fetching WiFi data for 2024-08-09")
+# Fetching WiFi data
+print(f"Fetching WiFi data for {output_date}")
 wifi_params = common_params.copy()
 wifi_data = fetch_data("network", wifi_params)
 wifi_df = pd.DataFrame(wifi_data)
-wifi_df.to_csv('wifi_data_2024_08_09.csv', index=False, encoding='utf-8')
-print("WiFi data has been saved to 'wifi_data_2024_08_09.csv'.")
+wifi_df.to_csv(f'wifi_data_{output_date}.csv', index=False, encoding='utf-8')
+print(f"WiFi data has been saved to 'wifi_data_{output_date}.csv'.")
 
-print("Fetching Bluetooth data for 2024-08-09")
+# Fetching Bluetooth data
+print(f"Fetching Bluetooth data for {output_date}")
 bluetooth_params = common_params.copy()
 bluetooth_data = fetch_data("bluetooth", bluetooth_params)
 bluetooth_df = pd.DataFrame(bluetooth_data)
-bluetooth_df.to_csv('bluetooth_data_2024_08_09.csv', index=False, encoding='utf-8')
-print("Bluetooth data has been saved to 'bluetooth_data_2024_08_09.csv'.")
+bluetooth_df.to_csv(f'bluetooth_data_{output_date}.csv', index=False, encoding='utf-8')
+print(f"Bluetooth data has been saved to 'bluetooth_data_{output_date}.csv'.")
 
-print("Fetching Cell data for 2024-08-09")
+# Fetching Cell data
+print(f"Fetching Cell data for {output_date}")
 cell_params = common_params.copy()
 cell_data = fetch_data("cell", cell_params)
 cell_df = pd.DataFrame(cell_data)
-cell_df.to_csv('cell_data_2024_08_09.csv', index=False, encoding='utf-8')
-print("Cell data has been saved to 'cell_data_2024_08_09.csv'.")
+cell_df.to_csv(f'cell_data_{output_date}.csv', index=False, encoding='utf-8')
+print(f"Cell data has been saved to 'cell_data_{output_date}.csv'.")
