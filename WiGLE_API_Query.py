@@ -3,7 +3,7 @@ from requests.auth import HTTPBasicAuth
 from datetime import datetime
 import pandas as pd
 
-#Authorization - replace "*****"
+#Authorization - replace: ***** with Your credentials
 API_Name = "*****" 
 API_Token = "*****"
 
