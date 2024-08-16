@@ -3,6 +3,10 @@ from requests.auth import HTTPBasicAuth
 from datetime import datetime
 import pandas as pd
 
+#Authorization - replace "*****"
+API_Name = "*****" 
+API_Token = "*****"
+
 # Date format for the API: yyyyMMdd
 output_date = "2024-07-03"
 start_time = datetime(2024, 7, 3, 0, 0, 0)  # Start of the day
@@ -34,7 +38,7 @@ def fetch_data(endpoint, params):
         if search_after:
             params['searchAfter'] = search_after
 
-        response = requests.get(url, auth=HTTPBasicAuth('*****', '*****'), params=params)
+        response = requests.get(url, auth=HTTPBasicAuth(API_Name, API_Token), params=params)
         response.raise_for_status()  # Error checking
         data = response.json()
 
